@@ -1,20 +1,21 @@
-// 1. Go to https://console.firebase.google.com -> Create project (free)
-// 2. Build > Authentication > Get started > Email/Password > Enable
-// 3. Build > Firestore Database > Create database (start in production mode)
-// 4. Project settings (gear icon) > General > "Your apps" > Web app (</>) > copy the config below
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID",
+  apiKey: "AIzaSyCxaVusbxvZeoZA9THnvAt1njKPpc0Op8k",
+  authDomain: "campus-outing-pass.firebaseapp.com",
+  projectId: "campus-outing-pass",
+  storageBucket: "campus-outing-pass.firebasestorage.app",
+  messagingSenderId: "26109685918",
+  appId: "1:26109685918:web:558fc804b968e4091d8b8f",
+  measurementId: "G-N3SZ9B18MX"
 };
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
