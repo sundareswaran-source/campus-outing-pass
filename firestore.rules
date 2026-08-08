@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function myProfile() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+
+    // Each user can read their own profile. Only edit profiles by hand in the console.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false; // add/edit users from the Firebase console only
+    }
+
+    // Warden's contact email, used to notify on new requests
+    match /config/warden {
+      allow read: if signedIn();
+      allow write: if false; // set this once from the console
+    }
+
+    match /requests/{reqId} {
+      // students can create their own requests
+      allow create: if signedIn() && request.resource.data.studentUid == request.auth.uid;
+      // anyone signed in can read (parents/warden need to see relevant ones; kept simple for a first version)
+      allow read: if signedIn();
+      // parent can only touch the "parent" field for their linked child; warden/staff can only touch "warden"
+      allow update: if signedIn() && (
+        (myProfile().role == 'parent' && myProfile().linkedRegNo == resource.data.regNo &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['parent'])) ||
+        ((myProfile().role == 'warden' || myProfile().role == 'staff') &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['warden']))
+      );
+      allow delete: if false;
+    }
+  }
+}
